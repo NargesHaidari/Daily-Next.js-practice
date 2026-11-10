@@ -1,10 +1,18 @@
-import Link from "next/link";
+async function getUsers(){
+  let response = await fetch('https://jsonplaceholder.typicode.com/users')
+  let data = response.json()
+  return data
+}
 
-export default function Home(){
-  return (
-    <div>
-      <h1>Welcome to my website</h1>
-      <Link href="/products">go to products</Link>
-    </div>
+export default async function showUsers(){
+  let users = await getUsers()
+  return(
+    <ul>
+      {
+        users.map((user)=>(
+          <li key={user.index}>{user.name}</li>
+        ))
+      }
+    </ul>
   )
 }
