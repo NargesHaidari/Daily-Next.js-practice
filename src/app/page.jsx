@@ -1,10 +1,12 @@
-import Link from "next/link";
+import ClientComponent from "./components/ClientComponent";
+import ShowPosts from "./components/ServerComponent";
 
 export default function Home(){
   return(
     <div>
-      <h1>This is home page</h1>
-      <Link className="text-red-500" href="/blog">go to blog page</Link>
+      <h1 className="text-2xl text-blue-500 m-2">This is srver component</h1>
+      <ShowPosts />
+      <ClientComponent />
     </div>
   )
 }
