@@ -15,6 +15,18 @@ export default function ShowProducts() {
             .catch(e => console.error(e));
     };
 
+    function handleAddProduct(){
+        const lastId = products[products.length - 1].id;
+
+        fetch("http://localhost:3000/api/products", {
+            method: "POST", 
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({id: lastId+1 , name: newName, price: newPrice})
+        })
+        .then(fetchProducts())
+        .catch(e=>{console.error(e)})
+    }
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -95,6 +107,10 @@ export default function ShowProducts() {
                         className="w-full bg-blue-600 text-white font-semibold
                         py-3 rounded-lg hover:bg-blue-700
                         active:scale-95 transition duration-200"
+                        onClick={()=>{handleAddProduct()
+                            setNewname("")
+                            setNewprice("")
+                        }}
                     >
                         Add Product
                     </button>
