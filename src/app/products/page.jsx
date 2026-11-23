@@ -51,7 +51,7 @@ export default async function ShowProducts({searchParams}){
             </ul>
             <Link href={`?page=${countPpage()}`} className="bg-red-100 py-1 px-3 hover:bg-red-200 active:bg-red-300 transition-all cursor-pointer rounded text-2xl inline-flex mt-5">Prev</Link>
             <span> --- </span>
-            <Link href={`?page=${countNpage()}`} className="bg-red-100 py-1 px-3 hover:bg-red-200 active:bg-red-300 transition-all cursor-pointer rounded text-2xl inline-flex mt-5">Next</Link>
+            <Link href={`?page=${countNpage()}`} className={`bg-red-100 py-1 px-3 hover:bg-red-200 active:bg-red-300 transition-all cursor-pointer rounded text-2xl inline-flex mt-5`}>Next</Link>
         </div>
     )
 }
