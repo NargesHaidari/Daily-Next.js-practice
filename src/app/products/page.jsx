@@ -1,57 +1,51 @@
-import Link from "next/link";
+"use client"
 
-const allProducts = [
-  { id: 1, name: "iPhone 15", price: 800 },
-  { id: 2, name: "Samsung Galaxy S24", price: 900 },
-  { id: 3, name: "MacBook Pro", price: 2000 },
-  { id: 4, name: "Dell XPS 15", price: 1500 },
-  { id: 5, name: "AirPods Pro", price: 250 },
-  { id: 6, name: "Sony WH-1000XM5", price: 350 },
-  { id: 7, name: "iPad Air", price: 600 },
-  { id: 8, name: "Samsung Tab S9", price: 700 },
-  { id: 9, name: "Apple Watch Series 9", price: 400 },
-  { id: 10, name: "Samsung Galaxy Watch 6", price: 300 },
-  { id: 11, name: "Logitech MX Master 3S", price: 100 },
-  { id: 12, name: "Asus ROG Strix", price: 1800 },
-];
+import { useEffect, useState, useRef } from "react"
 
-export default async function ShowProducts({searchParams}){
+export default function Products(){
 
-    let ppg = 3;
-    let currentPage = await searchParams;
-    let page = Number(currentPage.page) || 1;
-    let products = allProducts.slice((page-1) * ppg, page * ppg);
-    let maxPage = allProducts.length / ppg;
+    const [products, setProducts] = useState([]);
+    const [skip, setSkip] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    function countPpage(){
-        let p = page-1;
-        if(p==0){
-            return p = 1;
+    async function getProducts(){
+
+        if(loading || !hasMore) return;
+
+        setLoading(true);
+
+        try{
+            const response = await fetch(`https://dummyjson.com/products?limit=12&skip=${skip}`);
+            const data = await response.json();
+            setProducts([...products, ...data.products]);
+            setSkip(prev => prev + data.products.length);
+            setHasMore(skip + data.products.length < data.total);
+        }catch(e){
+            console.error(e)
+        }finally{
+            setLoading(false);
         }
-        return p;
     }
 
-    function countNpage(){
-        let p = page+1;
-        if(p > maxPage){
-            p = maxPage;
-        }
-        return p;
-    }
-    
+    useEffect(()=>{
+        getProducts();
+    }, [])
+
     return(
         <div className="p-6">
-            <h1 className="text-4xl bg-red-100 rounded p-1 text-red-600">Products</h1>
+            <h1 className="text-3xl bg-red-100 rounded p-3">Products List</h1>
             <ul>
                 {
-                    products.map(p=>(
-                        <li className="mt-3 p-1 rounded bg-blue-100" key={p.id}>{p.name} --- {p.price}</li>
+                    products.map(product=>(
+                        <li className="mt-2 bg-blue-100 p-1 rounded" key={product.id}>
+                            <h2>{product.title}</h2>
+                            <p>${product.price}</p>
+                        </li>
                     ))
                 }
             </ul>
-            <Link href={`?page=${countPpage()}`} className="bg-red-100 py-1 px-3 hover:bg-red-200 active:bg-red-300 transition-all cursor-pointer rounded text-2xl inline-flex mt-5">Prev</Link>
-            <span> --- </span>
-            <Link href={`?page=${countNpage()}`} className={`bg-red-100 py-1 px-3 hover:bg-red-200 active:bg-red-300 transition-all cursor-pointer rounded text-2xl inline-flex mt-5`}>Next</Link>
+            <div onClick={()=>{getProducts()}} className="bg-green-100 rounded p-2 rounded mt-2 inline-flex cursor-pointer hover:bg-green-200 active:bg-green-300 transition-all">Load more...</div>
         </div>
     )
 }
