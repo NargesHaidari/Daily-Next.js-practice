@@ -23,10 +23,10 @@ export default function Product({product}){
             </button>
 
             <Link
-                href="/"
+                href={`/product-details/${product.id}`}
                 className="block text-center text-blue-600 hover:text-blue-800 text-sm font-medium"
             >
-                View more
+                Details
             </Link>
 
         </div>
