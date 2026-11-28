@@ -1,10 +1,12 @@
-import Link from "next/link";
+import Products from "./components/Products";
 
-export default function Home(){
+export default async function Home(){
+  const res = await fetch("http://fakestoreapi.com/products");
+  const products = await res.json();
+
   return(
     <div>
-      <h1 className="text-2xl text-blue-500">This is home page</h1>
-      <Link href="/products">go to product page</Link>
+      <Products products={products} />
     </div>
   )
 }
